@@ -2800,7 +2800,7 @@ to_emoji () {
 # Function to parse a line, split it into tokens and then emojify
 # each token.
 parse_line () {
-    tokens=$(sed -r 's/:([a-zA-Z0-9_+-]+):/\n:\1:\n/g' <<< "$*")
+    tokens=$(sed 's/:\([a-zA-Z0-9_+-]\+\):/\n:\1:\n/g' <<< "$*")
     IFS=$'\n'; read -r -a tokens_arr -d '' <<< "$tokens"
     out=()
     for token in "${tokens_arr[@]}"; do
