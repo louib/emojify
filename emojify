@@ -2818,7 +2818,7 @@ emojify_line () {
                 emojified_token=$(to_emoji "$current_token$current_char")
 
                 # nothing changed. we still need the ending ':' as it might
-                # server for an upcoming emoji 😁😁🎉🎉
+                # serve for an upcoming emoji 😁😁🎉🎉
                 if [[ "$emojified_token" == "$current_token$current_char" ]]; then
                     emojified_line+=$current_token
                     current_token=$current_char
