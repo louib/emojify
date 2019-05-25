@@ -2801,30 +2801,43 @@ to_emoji () {
 # each token.
 parse_line () {
     line=$*
-    current_emoji=""
+    current_token=""
     translated_line=""
-    echo "line is "$line
+    # echo "line is "$line
     for (( i=0; i<${#line}; i++ )); do
         current_char="${line:$i:1}"
-        if [[ $current_char =~ ^:$ ]]; then
-          if [[ -z "$current_emoji" && ]]; then
-            echo ""
+        # echo "current_char is "$current_char
+
+        if [[ -z "$current_token" ]]; then
+          # starting a new token.
+          if [[ $current_char =~ ^:$ ]]; then
+            # echo "case 1"
+            current_token+=$current_char
           else
+            # echo "case 2"
+            translated_line+=$current_char
           fi
-        elif [[ $current_char =~ ^[a-zA-Z0-9_+-]$ ]]; then
-          echo "emoji context"
         else
-          echo "something else"
+          # finishing the current token.
+          if [[ $current_char =~ ^:$ ]]; then
+            # echo "case 3"
+            # TODO handle if the current_token is only ::
+            # TODO handle if the current_token was not translated: readd the ending :
+            current_token+=$current_char
+            current_token=$(to_emoji "$current_token")
+          elif [[ $current_char =~ ^[a-zA-Z0-9_+-]$ ]]; then
+            # echo "case 4"
+            current_token+=$current_char
+          else
+            # echo "case 5"
+            current_token+=$current_char
+            translated_line+=$current_token
+            current_token=""
+          fi
         fi
     done
-
-    IFS=$'\n'; read -r -a tokens_arr -d '' <<< "$tokens"
-    out=()
-    for token in "${tokens_arr[@]}"; do
-        out+=("$(to_emoji "$token")")
-    done
-
-    IFS=''; echo "${out[*]}"
+    translated_line+=$current_token
+    echo $translated_line
 }
 
 # Function to print help info.
