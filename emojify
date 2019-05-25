@@ -2823,8 +2823,8 @@ emojify_line () {
                     emojified_line+=$current_token
                     current_token=$current_char
                 else
-                  emojified_line+=$emojified_token
-                  current_token=""
+                    emojified_line+=$emojified_token
+                    current_token=""
                 fi
             # finishing the current token.
             elif [[ $current_char =~ ^[a-zA-Z0-9_+-]$ ]]; then
