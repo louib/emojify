@@ -2889,6 +2889,19 @@ start_interactive_mode () {
             current_search="$current_search$char"
         fi
         echo -en "\r$current_search"
+
+        # Not searching when only 1 character entered.
+        if [[ "$current_search" == "" || $(echo -n "$current_search" | wc -c) == "1" ]]; then
+            continue
+        fi
+
+        # echo ""
+        for key in "${!emojis[@]}"; do
+            if [[ "$key" == *"$current_search"* ]]; then
+                echo -e "$key ${emojis[$key]}"
+            fi
+        done
+
         #echo -e "\e[1A"
         # echo -en "\r$current_search"
     done
