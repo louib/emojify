@@ -2872,6 +2872,29 @@ check_version () {
     fi
 }
 
+start_interactive_mode () {
+    current_search=""
+    echo "Starting interactive mode"
+    while IFS='\n' read -n1 char; do
+        # printf "%d\n" "'$char"
+        echo -en "\033[2K"
+
+        # This is a backspace
+        if [ "$char" = $'\177' ]; then
+            if [[ "$current_search" != "" ]]; then
+                # Note: This is only valid in Bash >= 4.
+                current_search=${current_search::-1}
+            fi
+        else
+            current_search="$current_search$char"
+        fi
+        echo -en "\r$current_search"
+        #echo -e "\e[1A"
+        # echo -en "\r$current_search"
+    done
+
+}
+
 # If arguments are provided on the command line then check for supported help
 # options or process the arguments as emoji names.
 if [[ -n $1 ]]; then
@@ -2886,6 +2909,10 @@ if [[ -n $1 ]]; then
 
     '-v' | '--version' )
         echo $emojify_version
+        ;;
+
+    '-i' | '--interactive' )
+        start_interactive_mode
         ;;
 
     * )
